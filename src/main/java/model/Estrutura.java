@@ -2,11 +2,11 @@ package model;
 
 public abstract class Estrutura {
     
-    private  int id;
+    private int id;
     private String nome;
     private String tipo;
     private String tonalidade;
-    private String som;
+    private String som; //mudar no futuro
     
     public Estrutura(int id, String nome, String tipo, String tonalidade, String som) {
         this.id = id;

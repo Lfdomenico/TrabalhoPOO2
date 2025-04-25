@@ -3,7 +3,14 @@ public class Escala extends Estrutura {
     
     private String intervalos;
     private String notas;
-    private String escalaEquivalente;
+    private Escala escalaEquivalente;
+    
+    public Escala(String intervalos, String notas, Escala escalaEquivalente, int id, String nome, String tipo, String tonalidade, String som) {
+        super(id, nome, tipo, tonalidade, som);
+        this.intervalos = intervalos;
+        this.notas = notas;
+        this.escalaEquivalente = escalaEquivalente;
+    }
 
     public String getIntervalos() {
         return intervalos;
@@ -21,21 +28,13 @@ public class Escala extends Estrutura {
         this.notas = notas;
     }
 
-    public String getEscalaEquivalente() {
+    public Escala getEscalaEquivalente() {
         return escalaEquivalente;
     }
 
-    public void setEscalaEquivalente(String escalaEquivalente) {
+    public void setEscalaEquivalente(Escala escalaEquivalente) {
         this.escalaEquivalente = escalaEquivalente;
     }
-    
-    public Escala(String intervalos, String notas, String escalaEquivalente, int id, String nome, String tipo, String tonalidade, String som) {
-        super(id, nome, tipo, tonalidade, som);
-        this.intervalos = intervalos;
-        this.notas = notas;
-        this.escalaEquivalente = escalaEquivalente;
-    }
-    
 
     
 }

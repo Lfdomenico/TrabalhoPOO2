@@ -1,52 +1,53 @@
 package model;
 
+import java.util.ArrayList;
+
 public class CampoHarmonico extends Estrutura {
     
-    private String acordes;
-    private String escalaBase;
+    private ArrayList<Acorde> acordes;
+    private Escala escalaBase;
     private String relativaMenor;
     private String relativaMaior;
 
-    public String getAcordes() {
+    public CampoHarmonico(ArrayList<Acorde> acordes, Escala escalaBase, String relativaMenor, String relativaMaior, int id, String nome, String tipo, String tonalidade, String som) {
+        super(id, nome, tipo, tonalidade, som);
+        this.acordes = acordes;
+        this.escalaBase = escalaBase;
+        this.relativaMenor = relativaMenor;
+        this.relativaMaior = relativaMaior;
+    }
+
+    public ArrayList<Acorde> getAcordes() {
         return acordes;
     }
 
-    public void setAcordes(String acordes) {
-        this.acordes = acordes;
-    }
-
-    public String getEscalaBase() {
+    public Escala getEscalaBase() {
         return escalaBase;
-    }
-
-    public void setEscalaBase(String escalaBase) {
-        this.escalaBase = escalaBase;
     }
 
     public String getRelativaMenor() {
         return relativaMenor;
     }
 
-    public void setRelativaMenor(String relativaMenor) {
-        this.relativaMenor = relativaMenor;
-    }
-
     public String getRelativaMaior() {
         return relativaMaior;
+    }
+
+    public void setAcordes(ArrayList<Acorde> acordes) {
+        this.acordes = acordes;
+    }
+
+    public void setEscalaBase(Escala escalaBase) {
+        this.escalaBase = escalaBase;
+    }
+
+    public void setRelativaMenor(String relativaMenor) {
+        this.relativaMenor = relativaMenor;
     }
 
     public void setRelativaMaior(String relativaMaior) {
         this.relativaMaior = relativaMaior;
     }
-    
-    public CampoHarmonico(int id, String nome, String tipo, String tonalidade, String som, String relativaMenor, String relativaMaior, String escalaBase, String acordes) {
-        super(id, nome, tipo, tonalidade, som);
-        this.relativaMenor = relativaMenor;
-        this.relativaMaior = relativaMaior;
-        this.acordes = acordes;
-        this.escalaBase = escalaBase;
-    }   
-    
-    
+
     
 }

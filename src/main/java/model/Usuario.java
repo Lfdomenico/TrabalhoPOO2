@@ -1,9 +1,17 @@
 package model;
 
+import java.util.ArrayList;
+
 public class Usuario{
     
     private String nome;
-    private String progressoes;
+    private ArrayList<Progressao> progressoes;
+    //no futuro colocar os favoritos como atributo??
+    
+    public Usuario(String nome, ArrayList<Progressao> progressoes) {
+        this.nome = nome;
+        this.progressoes = progressoes;
+    }
 
     public String getNome() {
         return nome;
@@ -13,16 +21,13 @@ public class Usuario{
         this.nome = nome;
     }
 
-    public String getProgressoes() {
+    public ArrayList<Progressao> getProgressoes() {
         return progressoes;
     }
 
-    public void setProgressoes(String progressoes) {
+    public void setProgressoes(ArrayList<Progressao> progressoes) {
         this.progressoes = progressoes;
     }
 
-    public Usuario(String nome, String progressoes) {
-        this.nome = nome;
-        this.progressoes = progressoes;
-    }
+
 }
