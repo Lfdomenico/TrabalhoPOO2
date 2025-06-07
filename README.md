@@ -12,11 +12,15 @@ O sistema tem por objetivo auxiliar no ensino de teoria musical abordando assunt
 | RF05 | O sistema deve permitir a exportação de progressões.| Alta |
 | RF06 | O usuário pode buscar por diferentes acordes e escalas.| Alta |
 | RF07 | O usuário pode favoritar um acorde ou escala.| Média |
-| RF08 | O sistema deve exibir informações complementares sobre acordes e escala.| Média |
-| RF09 | O sistema pode reproduzir sonoramente as escalas, os acordes, as notas e as progressões.| Baixa |
-| RF10 | O sistema pode reconhecer as notas tocadas em um teclado/piano conectado por USB.| Baixa |
-| RF011 | O usuário pode fazer anotações.| Baixa | <!-- Alterar essa descrição?? -->
-| RF012 | O usuário pode buscar informações sobre músicas já existentes.| Baixa |
+| RF08 | O sistema pode exibir informações complementares sobre acordes e escala.| Média |
+| RF09 | O usuário pode transpor notas.| Média |
+| RF10 | O usuário pode inverter acordes.| Média |
+| RF11 | O sistema pode reproduzir sonoramente as escalas, os acordes, as notas e as progressões.| Baixa |
+| RF12 | O sistema deve reconhecer os dispositivos MIDI conectados.| Baixa |
+| RF13 | O sistema pode se conectar com dispositivos MIDI.| Baixa |
+| RF14 | O sistema pode reconhecer as notas tocadas em um teclado/piano conectado por USB.| Baixa |
+| RF15 | O usuário pode fazer anotações.| Baixa | <!-- Alterar essa descrição?? -->
+| RF16 | O usuário pode buscar informações sobre músicas já existentes.| Baixa |
 
 ## Requisitos Não Funcionais
 | Identificador | Descrição                                                                                   | Tipo         |
