@@ -10,10 +10,10 @@ O sistema tem por objetivo auxiliar no ensino de teoria musical abordando assunt
 | RF03 | O sistema deve permitir a inclusão de progressões que o usuário criou.| Alta |
 | RF04 | O sistema deve permitir a importação de progressões.| Alta |
 | RF05 | O sistema deve permitir a exportação de progressões.| Alta |
-| RF06 | O usuário pode buscar por diferentes campos harmônicos, acordes e escalas.| Alta |
-| RF07 | O usuário pode favoritar um acorde, campo harmônico ou escala.| Média |
-| RF08 | O sistema deve exibir informações complementares sobre acordes, campos harmônicos e escala.| Média |
-| RF09 | O sistema pode reproduzir sonoramente as escalas, os campos harmônicos e os acordes.| Baixa |
+| RF06 | O usuário pode buscar por diferentes acordes e escalas.| Alta |
+| RF07 | O usuário pode favoritar um acorde ou escala.| Média |
+| RF08 | O sistema deve exibir informações complementares sobre acordes e escala.| Média |
+| RF09 | O sistema pode reproduzir sonoramente as escalas, os acordes, as notas e as progressões.| Baixa |
 | RF10 | O sistema pode reconhecer as notas tocadas em um teclado/piano conectado por USB.| Baixa |
 | RF011 | O usuário pode fazer anotações.| Baixa | <!-- Alterar essa descrição?? -->
 | RF012 | O usuário pode buscar informações sobre músicas já existentes.| Baixa |
