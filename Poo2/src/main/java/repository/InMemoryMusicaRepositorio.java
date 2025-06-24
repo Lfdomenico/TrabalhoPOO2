@@ -45,4 +45,16 @@ public class InMemoryMusicaRepositorio implements MusicaRepositorio {
                 )
                 .collect(Collectors.toList());
     }
+
+	@Override
+	public List<Musica> findAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteById(int id) {
+		// TODO Auto-generated method stub
+		
+	}
 }

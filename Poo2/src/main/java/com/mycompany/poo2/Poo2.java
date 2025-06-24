@@ -14,31 +14,37 @@ import service.*;
 import repository.EscalaRepositorioMySQL;
 import repository.AcordeRepositorioMySQL;
 import repository.AnotacaoRepositorioMySQL;
-import repository.ProgressaoRepositorioMySQL; 
-import controller.ConexaoBD;
+import repository.ProgressaoRepositorioMySQL;
+import repository.MusicaRepositorioMySQL; // Importar MusicaRepositorioMySQL
+
+import controller.ConexaoBD; // Certifique-se de que esta classe existe e configura a conexão
 
 public class Poo2 {
 
 	public static void main(String[] args) {
 
-		ElementoMusicalRepositorio elementoRepo = new InMemoryElementoMusicalRepositorio();
+		// Repositories
+		// Recomenda-se que todos os repositórios sejam MySQL se você está usando um BD real
+		ElementoMusicalRepositorio elementoRepo = new InMemoryElementoMusicalRepositorio(); // Mude para MySQL se ElementoMusical for para BD
 		AcordeRepositorio acordeRepo = new AcordeRepositorioMySQL();
-		MusicaRepositorio musicaRepo = new InMemoryMusicaRepositorio();
-		NotaRepositorio notaRepo = new InMemoryNotaRepositorio();
+		MusicaRepositorio musicaRepo = new MusicaRepositorioMySQL(); // MUDANÇA: Usar MusicaRepositorioMySQL
+		NotaRepositorio notaRepo = new InMemoryNotaRepositorio(); // Mude para MySQL se Nota for para BD
 
 		EscalaRepositorio escalaRepo = new EscalaRepositorioMySQL();
+		// AnotacaoRepositorioMySQL pode precisar de um ElementoMusicalRepositorioMySQL se depender de IDs reais do BD
 		AnotacaoRepositorio anotacaoRepo = new AnotacaoRepositorioMySQL(elementoRepo);
-
-		ProgressaoRepositorio progressaoRepo = new ProgressaoRepositorioMySQL(acordeRepo);
-
-		ServicoBusca servicoBusca = new ServicoBusca(elementoRepo, acordeRepo, escalaRepo, musicaRepo, notaRepo);
+		ProgressaoRepositorio progressaoRepo = new ProgressaoRepositorioMySQL(acordeRepo); 
+																									
+		// Services (ServicoBusca agora faz tudo para Música)
+		ServicoBusca servicoBusca = new ServicoBusca(elementoRepo, acordeRepo, escalaRepo, musicaRepo, notaRepo); // Passar musicaRepo
 		ServicoAnotacao servicoAnotacao = new ServicoAnotacao(anotacaoRepo, elementoRepo);
 		ServicoProgressao servicoProgressao = new ServicoProgressao(progressaoRepo, acordeRepo); 
-																									
-		ControladorBusca controlador = new ControladorBusca(servicoBusca);
+		// ServicoMusica servicoMusica = new ServicoMusica(musicaRepo); // LINHA REMOVIDA: ServicoMusica não existe mais
+		
+		// Controllers
+		ControladorBusca controlador = new ControladorBusca(servicoBusca); // controlador é usado para buscar
 
 		Scanner scanner = new Scanner(System.in);
-
 
 		int opcaoMenuPrincipal = -1;
 		while (opcaoMenuPrincipal != 0) {
@@ -48,13 +54,14 @@ public class Poo2 {
 			System.out.println("|2. Gerenciar Acordes                 |");
 			System.out.println("|3. Gerenciar Anotações               |");
 			System.out.println("|4. Gerenciar Progressões Harmônicas  |"); 
+			System.out.println("|5. Gerenciar Músicas                 |"); // NOVO MENU
 			System.out.println("|0. Sair da Aplicação                 |");
 			System.out.println("---------------------------------------");
 			System.out.print("Escolha uma opção:");
 
 			try {
 				opcaoMenuPrincipal = scanner.nextInt();
-				scanner.nextLine();
+				scanner.nextLine(); // Consumir a nova linha
 
 				switch (opcaoMenuPrincipal) {
 				case 1:
@@ -69,6 +76,10 @@ public class Poo2 {
 				case 4: 
 					gerenciarProgressoes(scanner, servicoProgressao);
 					break;
+				case 5: // NOVO CASE
+					// MUDANÇA AQUI: passa servicoBusca, já que ServicoMusica foi incorporado
+					gerenciarMusicas(scanner, servicoBusca, controlador); 
+					break;
 				case 0:
 					System.out.println("Saindo da aplicação. Tchau!");
 					break;
@@ -77,7 +88,7 @@ public class Poo2 {
 				}
 			} catch (java.util.InputMismatchException e) {
 				System.err.println("Entrada inválida. Por favor, digite um número para a opção.");
-				scanner.nextLine();
+				scanner.nextLine(); // Consumir a entrada inválida
 			} catch (Exception e) {
 				System.err.println("Ocorreu um erro inesperado: " + e.getMessage());
 				e.printStackTrace();
@@ -87,6 +98,13 @@ public class Poo2 {
 		System.out.println("\n--- APLICAÇÃO FINALIZADA ---");
 	}
 
+	// ==============================================================================
+	// COLOQUE AQUI OS MÉTODOS gerenciarEscalas, gerenciarAcordes,
+	// gerenciarAnotacoes, gerenciarProgressoes DO SEU CÓDIGO ORIGINAL.
+	// E logo abaixo, o novo método gerenciarMusicas.
+	// ==============================================================================
+
+	// Seu método gerenciarEscalas original
 	private static void gerenciarEscalas(Scanner scanner, EscalaRepositorio escalaRepo, ControladorBusca controlador) {
         int opcaoEscalas = -1;
         while (opcaoEscalas != 0) {
@@ -106,6 +124,10 @@ public class Poo2 {
                         System.out.print("Digite a cifra EXATA da escala (campo 'Nome' no BD) para ver sua estrutura: ");
                         String cifraExataBusca = scanner.nextLine();
 
+                        // O método findEstruturaByNome no seu EscalaRepositorio só retorna Optional<String>
+                        // Se você quiser buscar por nome (como em Acordes e Músicas), EscalaRepositorio precisa de um findByNameContaining
+                        // ou um método que retorne Escala.
+                        // Por ora, mantive o que você tinha.
                         Optional<String> estruturaOpt = escalaRepo.findEstruturaByNome(cifraExataBusca);
                         
                         if (estruturaOpt.isPresent()) {
@@ -160,6 +182,7 @@ public class Poo2 {
     }
     
 
+	// Seu método gerenciarAcordes original
 	private static void gerenciarAcordes(Scanner scanner, AcordeRepositorio acordeRepo, ControladorBusca controlador) {
 		int opcaoAcordes = -1;
 		while (opcaoAcordes != 0) {
@@ -181,12 +204,15 @@ public class Poo2 {
 					System.out.print("Digite o tipo do acorde (ex: Maior, Menor, Diminuto): ");
 					String tipoAcorde = scanner.nextLine();
 
-					Map<String, String> filtrosAcorde = Map.of("tipo", "acorde", "nome", cifraAcorde, "tipoAcorde",
-							tipoAcorde);
-					List<?> resultadoAcorde = controlador.realizarBusca(filtrosAcorde);
+					// Se o ServicoBusca tem um método específico, é melhor usar ele
+					Optional<Acorde> acordeEncontradoOpt = ((ServicoBusca) controlador.servicoBusca).buscarAcordePorNomeETipo(cifraAcorde, tipoAcorde);
+					// A linha abaixo pode ser removida se a busca específica for usada
+					// Map<String, String> filtrosAcorde = Map.of("tipo", "acorde", "nome", cifraAcorde, "tipoAcorde",tipoAcorde);
+					// List<?> resultadoAcorde = controlador.realizarBusca(filtrosAcorde);
 
-					if (!resultadoAcorde.isEmpty() && resultadoAcorde.get(0) instanceof Acorde) {
-						Acorde acordeEncontrado = (Acorde) resultadoAcorde.get(0);
+
+					if (acordeEncontradoOpt.isPresent()) { // !resultadoAcorde.isEmpty() && resultadoAcorde.get(0) instanceof Acorde
+						Acorde acordeEncontrado = acordeEncontradoOpt.get(); // (Acorde) resultadoAcorde.get(0);
 						System.out.println("\nAcorde encontrado:");
 						System.out.println(acordeEncontrado);
 						System.out.println("Notas do acorde: " + acordeEncontrado.getInfoComplementar());
@@ -251,6 +277,7 @@ public class Poo2 {
 		}
 	}
 
+	// Seu método gerenciarAnotacoes original
 	private static void gerenciarAnotacoes(Scanner scanner, ServicoAnotacao servicoAnotacao,
 			ServicoBusca servicoBusca) {
 		int opcaoAnotacoes = -1;
@@ -344,6 +371,7 @@ public class Poo2 {
 		}
 	}
 
+	// Seu método gerenciarProgressoes original
 	private static void gerenciarProgressoes(Scanner scanner, ServicoProgressao servicoProgressao) {
 		int opcaoProgressoes = -1;
 		while (opcaoProgressoes != 0) {
@@ -414,10 +442,138 @@ public class Poo2 {
 					System.out.println("Opção inválida para Progressões. Por favor, tente novamente.");
 				}
 			} catch (java.util.InputMismatchException e) {
-				System.err.println("Entrada inválida. Por favor, digite um número.");
+				System.err.println("Entrada inválita. Por favor, digite um número.");
 				scanner.nextLine();
 			} catch (Exception e) {
 				System.err.println("Ocorreu um erro inesperado no menu de Progressões: " + e.getMessage());
+				e.printStackTrace();
+			}
+		}
+	}
+
+	// NOVO MÉTODO: gerenciarMusicas (este deve ser adicionado)
+	private static void gerenciarMusicas(Scanner scanner, ServicoBusca servicoBusca, ControladorBusca controlador) {
+		int opcaoMusicas = -1;
+		while (opcaoMusicas != 0) {
+			System.out.println("\n--- MENU DE MÚSICAS ---");
+			System.out.println("1. Buscar Música por Título ou Artista");
+			System.out.println("2. Inserir Nova Música");
+			System.out.println("3. Atualizar Música Existente");
+			System.out.println("4. Remover Música");
+			System.out.println("5. Listar Todas as Músicas");
+			System.out.println("0. Voltar ao Menu Principal");
+			System.out.print("Escolha uma opção para Músicas: ");
+
+			try {
+				opcaoMusicas = scanner.nextInt();
+				scanner.nextLine(); // Consumir a nova linha
+
+				switch (opcaoMusicas) {
+				case 1: // Buscar Música
+					System.out.print("Digite o título ou artista para buscar: ");
+					String queryBusca = scanner.nextLine();
+					List<Musica> musicasEncontradas = servicoBusca.buscarMusicasPorTituloOuArtista(queryBusca);
+					if (musicasEncontradas.isEmpty()) {
+						System.out.println("Nenhuma música encontrada com '" + queryBusca + "'.");
+					} else {
+						System.out.println("\nMúsicas encontradas:");
+						for (Musica m : musicasEncontradas) {
+							System.out.println(m);
+						}
+					}
+					break;
+				case 2: // Inserir Nova Música
+					System.out.println("\n--- Inserir Nova Música ---");
+					System.out.print("Título: ");
+					String novoTitulo = scanner.nextLine();
+					System.out.print("Artista: ");
+					String novoArtista = scanner.nextLine();
+					System.out.print("Ano: ");
+					int novoAno = scanner.nextInt();
+					scanner.nextLine(); // Consumir a nova linha
+					System.out.print("Tônica: ");
+					String novaTonica = scanner.nextLine();
+
+					Musica musicaCriada = servicoBusca.criarMusica(novoTitulo, novoArtista, novoAno, novaTonica);
+					if (musicaCriada != null) {
+						System.out.println("Música criada com sucesso: " + musicaCriada);
+					} else {
+						System.out.println("Falha ao criar música.");
+					}
+					break;
+				case 3: // Atualizar Música Existente
+					System.out.println("\n--- Atualizar Música ---");
+					System.out.print("Digite o ID da música para atualizar: ");
+					int idAtualizar = scanner.nextInt();
+					scanner.nextLine(); // Consumir a nova linha
+
+					Optional<Musica> musicaParaAtualizarOpt = servicoBusca.buscarMusicaPorId(idAtualizar);
+					if (musicaParaAtualizarOpt.isPresent()) {
+						Musica musicaAtual = musicaParaAtualizarOpt.get();
+						System.out.println("Música atual: " + musicaAtual);
+
+						System.out.print("Novo Título (deixe em branco para manter '" + musicaAtual.getTitulo() + "'): ");
+						String updateTitulo = scanner.nextLine();
+						if (updateTitulo.isEmpty()) {
+							updateTitulo = musicaAtual.getTitulo();
+						}
+
+						System.out.print("Novo Artista (deixe em branco para manter '" + musicaAtual.getArtista() + "'): ");
+						String updateArtista = scanner.nextLine();
+						if (updateArtista.isEmpty()) {
+							updateArtista = musicaAtual.getArtista();
+						}
+
+						System.out.print("Novo Ano (digite 0 para manter '" + musicaAtual.getAno() + "'): ");
+						int updateAno = scanner.nextInt();
+						scanner.nextLine(); // Consumir a nova linha
+						if (updateAno == 0) {
+							updateAno = musicaAtual.getAno();
+						}
+
+						System.out.print("Nova Tônica (deixe em branco para manter '" + musicaAtual.getTonica() + "'): ");
+						String updateTonica = scanner.nextLine();
+						if (updateTonica.isEmpty()) {
+							updateTonica = musicaAtual.getTonica();
+						}
+
+						Musica musicaAtualizada = servicoBusca.atualizarMusica(idAtualizar, updateTitulo, updateArtista, updateAno, updateTonica);
+						if (musicaAtualizada != null) {
+							System.out.println("Música atualizada com sucesso: " + musicaAtualizada);
+						}
+					} else {
+						System.out.println("Música com ID " + idAtualizar + " não encontrada.");
+					}
+					break;
+				case 4: // Remover Música
+					System.out.println("\n--- Remover Música ---");
+					System.out.print("Digite o ID da música para remover: ");
+					int idRemover = scanner.nextInt();
+					scanner.nextLine(); // Consumir a nova linha
+					servicoBusca.removerMusica(idRemover);
+					break;
+				case 5: // Listar Todas as Músicas
+					System.out.println("\n--- Todas as Músicas no Banco de Dados ---");
+					List<Musica> todasMusicas = servicoBusca.listarTodasMusicas();
+					if (todasMusicas.isEmpty()) {
+						System.out.println("Nenhuma música encontrada no banco de dados.");
+					} else {
+						for (Musica m : todasMusicas) {
+							System.out.println(m);
+						}
+					}
+					break;
+				case 0:
+					System.out.println("Voltando ao Menu Principal.");
+					break;
+				default:
+					System.out.println("Opção inválida para Músicas. Por favor, tente novamente.");
+				}
+			} catch (java.util.InputMismatchException e) {
+				System.err.println("Entrada inválida. Por favor, digite um número.");
+				scanner.nextLine();
+			} catch (Exception e) {
+				System.err.println("Ocorreu um erro inesperado no menu de Músicas: " + e.getMessage());
 				e.printStackTrace();
 			}
 		}

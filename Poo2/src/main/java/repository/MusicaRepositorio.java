@@ -13,4 +13,10 @@ public interface MusicaRepositorio {
 
     //busca pelo id
     Optional<Musica> findById(int id);  
+
+    // Novo: Listar todas as músicas
+    List<Musica> findAll();
+
+    // Novo: Deletar música por ID
+    void deleteById(int id);
 }

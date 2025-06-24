@@ -10,7 +10,7 @@ import model.Acorde;
 
 public class ControladorBusca {
 
-    private final ServicoBusca servicoBusca;
+    public final ServicoBusca servicoBusca;
 
     public ControladorBusca(ServicoBusca servicoBusca) {
         this.servicoBusca = servicoBusca;
